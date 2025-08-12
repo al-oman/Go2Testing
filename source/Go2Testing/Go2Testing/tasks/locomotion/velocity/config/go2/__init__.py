@@ -12,7 +12,7 @@ from . import agents
 ##
 
 gym.register(
-    id="Template-Velocity-Flat-Unitree-Go2-v0",
+    id="Go2Testing-Flat-v0",
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
@@ -23,7 +23,7 @@ gym.register(
 )
 
 gym.register(
-    id="Template-Velocity-Flat-Unitree-Go2-Play-v0",
+    id="Go2Testing-Flat-Play-v0",
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
@@ -34,7 +34,7 @@ gym.register(
 )
 
 gym.register(
-    id="Template-Velocity-Rough-Unitree-Go2-v0",
+    id="Go2Testing-Rough-v0",
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={
@@ -45,7 +45,7 @@ gym.register(
 )
 
 gym.register(
-    id="Template-Velocity-Rough-Unitree-Go2-Play-v0",
+    id="Go2Testing-Rough-Play-v0",
     entry_point="isaaclab.envs:ManagerBasedRLEnv",
     disable_env_checker=True,
     kwargs={

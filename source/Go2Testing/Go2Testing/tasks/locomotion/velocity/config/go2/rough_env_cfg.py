@@ -25,8 +25,8 @@ class UnitreeGo2RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.scene.robot.init_state.joint_pos = {
             ".*L_hip_joint": math.radians(22.5),
             ".*R_hip_joint": math.radians(-22.5),
-            ".*thigh_joint": math.radians(70.0),
-            ".*calf_joint": math.radians(-135.0),
+            ".*thigh_joint": math.radians(60.0),
+            ".*calf_joint": math.radians(-150.0),
         }
         
         self.scene.height_scanner.prim_path = "{ENV_REGEX_NS}/Robot/base"
@@ -65,8 +65,8 @@ class UnitreeGo2RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         self.rewards.track_ang_vel_z_exp.weight = 0.75
         self.rewards.dof_acc_l2.weight = -2.5e-7
 
-        # terminations
-        # self.terminations.base_contact.params["sensor_cfg"].body_names = "base"
+        # remove base_contact terminations
+        self.terminations.base_contact = None
 
 
 @configclass
