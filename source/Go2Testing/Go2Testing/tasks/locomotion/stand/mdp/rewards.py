@@ -11,25 +11,31 @@ if TYPE_CHECKING:
 
 
 def feet_air_time(
-    env: ManagerBasedRLEnv, command_name: str, sensor_cfg: SceneEntityCfg, threshold: float
+    env: ManagerBasedRLEnv, sensor_cfg: SceneEntityCfg, threshold: float
 ) -> torch.Tensor:
-    """Reward long steps taken by the feet using L2-kernel.
+    """Penalizes feet being in the air
 
-    This function rewards the agent for taking steps that are longer than a threshold. This helps ensure
-    that the robot lifts its feet off the ground and takes steps. The reward is computed as the sum of
-    the time for which the feet are in the air.
+    Args:
+        env: the RL environment
+        sensor_cfg: configuration for the contact sensor
+        threshold: the minimum air time to start penalizing
 
-    If the commands are small (i.e. the agent is not supposed to take a step), then the reward is zero.
+    Returns:
+        Negative reward (penalty) for feet being in the air longer than the threshold time
     """
     # extract the used quantities (to enable type-hinting)
     contact_sensor: ContactSensor = env.scene.sensors[sensor_cfg.name]
-    # compute the reward
-    first_contact = contact_sensor.compute_first_contact(env.step_dt)[:, sensor_cfg.body_ids]
-    last_air_time = contact_sensor.data.last_air_time[:, sensor_cfg.body_ids]
-    reward = torch.sum((last_air_time - threshold) * first_contact, dim=1)
-    # no reward for zero command
-    reward *= torch.norm(env.command_manager.get_command(command_name)[:, :2], dim=1) > 0.1
-    return reward
+    
+    # get current air time for each foot
+    current_air_time = contact_sensor.data.current_air_time[:, sensor_cfg.body_ids]
+    
+    # penalize air time above threshold
+    excess_air_time = torch.clamp(current_air_time - threshold, min=0.0)
+    
+    # sum penalty across all feet (negative reward)
+    penalty = -torch.sum(excess_air_time, dim=1)
+    
+    return penalty
 
 
 def feet_air_time_positive_biped(

@@ -5,7 +5,7 @@
 
 from isaaclab.utils import configclass
 
-from Go2Testing.tasks.locomotion.velocity.velocity_env_cfg import LocomotionVelocityRoughEnvCfg
+from Go2Testing.tasks.locomotion.stand.stand_env_cfg import QuadrupedStandEnvCfg
 import math
 ##
 # Pre-defined configs
@@ -14,14 +14,14 @@ from isaaclab_assets.robots.unitree import UNITREE_GO2_CFG  # isort: skip
 
 
 @configclass
-class UnitreeGo2RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
+class UnitreeGo2RoughEnvCfg(QuadrupedStandEnvCfg):
     def __post_init__(self):
         # post init of parent
         super().__post_init__()
 
         # robot configuration
         self.scene.robot = UNITREE_GO2_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
-        self.scene.robot.init_state.pos = (0.0, 0.0, 1.2)
+        self.scene.robot.init_state.pos = (0.0, 0.0, 0.1)
         self.scene.robot.init_state.joint_pos = {
             ".*L_hip_joint": math.radians(22.5),
             ".*R_hip_joint": math.radians(-22.5),
@@ -57,13 +57,14 @@ class UnitreeGo2RoughEnvCfg(LocomotionVelocityRoughEnvCfg):
         }
 
         # rewards
-        self.rewards.feet_air_time.params["sensor_cfg"].body_names = ".*_foot"
-        self.rewards.feet_air_time.weight = 0.01
-        self.rewards.undesired_contacts = None
-        self.rewards.dof_torques_l2.weight = -0.0002
-        self.rewards.track_lin_vel_xy_exp.weight = 1.5
-        self.rewards.track_ang_vel_z_exp.weight = 0.75
-        self.rewards.dof_acc_l2.weight = -2.5e-7
+        # # ----- OLD REWARDS -----
+        # self.rewards.feet_air_time.params["sensor_cfg"].body_names = ".*_foot"
+        # self.rewards.feet_air_time.weight = 0.01
+        # self.rewards.undesired_contacts = None
+        # self.rewards.dof_torques_l2.weight = -0.0002
+        # self.rewards.track_lin_vel_xy_exp.weight = 1.5
+        # self.rewards.track_ang_vel_z_exp.weight = 0.75
+        # self.rewards.dof_acc_l2.weight = -2.5e-7
 
         # remove base_contact terminations
         self.terminations.base_contact = None
